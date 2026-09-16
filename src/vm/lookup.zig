@@ -41,7 +41,10 @@ pub fn resolveField(self: *VM, object: Data, key: Data, result_reg: ?@import("op
 
                 // negative index, counting from the end. slice needs to be handled separately in execSlice
                 if (n < 0) {
-                    if (str.len < idx) return null;
+                    if (idx > str.len) {
+                        try self.setRuntimeMessageFmt("string index {d} out of range (len {d})", .{ n, str.len });
+                        return error.TypeError;
+                    }
                     return .{ .value = try self.ownDataStringNoDedup(&.{str[str.len - idx]}), .from_meta = false };
                 }
 
@@ -49,6 +52,9 @@ pub fn resolveField(self: *VM, object: Data, key: Data, result_reg: ?@import("op
                 // if it needs to panic, it'll be handled from above
                 if (idx < str.len) {
                     return .{ .value = try self.ownDataStringNoDedup(str[idx .. idx + 1]), .from_meta = false };
+                }
+                if (idx >= str.len) {
+                    try self.setRuntimeMessageFmt("string index {d} out of range (len {d})", .{ idx, str.len });
                 }
                 return error.TypeError;
             }
