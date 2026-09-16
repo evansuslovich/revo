@@ -26,3 +26,9 @@ pub declare number.round = fn(self: number) -> number
 #* absolute value *#
 pub declare number.abs = fn(self: number) -> number
 
+#* is even? *#
+pub declare number.is_even?= fn(self: number) -> bool
+
+#* is odd? *#
+pub declare number.is_odd? = fn(self: number) -> bool
+

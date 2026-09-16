@@ -33,6 +33,14 @@ pub const Impl = struct {
         _ = self;
         return root.number_(&.{val}, vm);
     }
+    pub fn @"is_even?"(vm: *VM, n: Ts.number) !HostResult {
+        _ = vm;
+        return ._bool(@mod(n, 2) == 0);
+    }
+    pub fn @"is_odd?"(vm: *VM, n: Ts.number) !HostResult {
+        _ = vm;
+        return ._bool(@mod(n, 2) == 1);
+    }
 };
 
 pub const impls = root.impls(Impl).val;
@@ -51,6 +59,16 @@ test "number module and metatable" {
     try testing.topNumber("3.5:round()", 4);
     try testing.topNumber("(-3):abs()", 3);
     try testing.topNumber("number.abs(-7)", 7);
+    try testing.topTrue("number.is_even?(-2);");
+    try testing.topFalse("number.is_even?(-1);");
+    try testing.topTrue("number.is_even?(0);");
+    try testing.topFalse("number.is_even?(1);");
+    try testing.topTrue("number.is_even?(2);");
+    try testing.topFalse("number.is_odd?(-2);");
+    try testing.topTrue("number.is_odd?(-1);");
+    try testing.topFalse("number.is_odd?(0);");
+    try testing.topTrue("number.is_odd?(1);");
+    try testing.topFalse("number.is_odd?(2);");
 }
 
 const std = @import("std");
